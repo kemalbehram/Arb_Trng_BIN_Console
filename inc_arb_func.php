@@ -1231,7 +1231,7 @@ function Arb_Manage_Order($conn, $exchange, $key, $secret, $action_to_do, $curre
                     }
                     else
                         {
-                        $info = "Arb_Manage_Order($current_pair, Status $trng_status, Step 1, $action_to_do, $Order_Type, $new_vol), ERROR: UNKNOW";
+                        $info = "Arb_Manage_Order($current_pair, Status $trng_status, Step 1, $action_to_do, $Order_Type), ERROR: UNKNOW";
                         echo "\n $info";
                         Log_system_error($conn, $info);                             
                     }                                        
@@ -1277,7 +1277,7 @@ function Arb_Manage_Order($conn, $exchange, $key, $secret, $action_to_do, $curre
                 } 
                 else{   
                     if($counter >= $error_loop){ // I have exceeded the maximum number of attempts to block the application 
-                        $info = "Arb_Manage_Order($current_pair, Status $trng_status, Step 2, $action_to_do, $Order_Type, $new_vol), ERROR: LOOP > $error_loop";
+                        $info = "Arb_Manage_Order($current_pair, Status $trng_status, Step 2, $action_to_do, $Order_Type), ERROR: LOOP > $error_loop";
                         echo "\n $info";
                         Log_system_error($conn, $info);   
                         exit;    
@@ -1336,7 +1336,7 @@ function Arb_Manage_Order($conn, $exchange, $key, $secret, $action_to_do, $curre
                 } 
                 else{
                     if($counter >= $error_loop){ // I have exceeded the maximum number of attempts to block the application
-                        $info = "Arb_Manage_Order($current_pair, Status $trng_status, Step 3, $action_to_do, $Order_Type, $new_vol), ERROR: LOOP > $error_loop";
+                        $info = "Arb_Manage_Order($current_pair, Status $trng_status, Step 3, $action_to_do, $Order_Type), ERROR: LOOP > $error_loop";
                         echo "\n $info";
                         Log_system_error($conn, $info);   
                         exit;    
@@ -1379,33 +1379,17 @@ function Arb_add_order_test($conn, $exchange, $key, $secret, $current_pair, $act
 
     switch ($triangle_step) {
         case 1: // Triangle Step 1
-            $price = add_remove_rnd($P1);
-            if(($trng_status == 1) || ($trng_status == 3)){
-                $cost = $Volume / $price;
-            }
-            else{
-                $cost = $Volume * $price;
-            }            
+            $price = add_remove_rnd($P1);         
             break;
         case 2:  // Triangle Step 2
             $price = add_remove_rnd($P2);
-            if(($trng_status == 1) || ($trng_status == 3)){
-                $cost = $Volume / $price;
-            }
-            else{
-                $cost = $Volume * $price;
-            }
             break;
         case 3:  // Triangle Step 3
             $price = add_remove_rnd($P3);            
-            if(($trng_status == 1) || ($trng_status == 4)){
-                $cost = $Volume * $price;
-            }
-            else{
-                $cost = $Volume / $price;
-            }
             break;
-    }
+    }    
+    $cost = $Volume * $price;
+
     $response = array("id" => $ord_id, "timestamp" => $data_a, "price" => $price, "amount" => $amount, "cost" => $cost, "filled" => $filled, "remaining" => $remaining, "status" => $status, "info" => Array("status" => $status2));                 
     $info = array($data_a, $ord_id, $current_pair, $triangle_step, $action_to_do, $Order_Type, $price, $amount, $cost, $filled, $remaining, $status, $status2, $triangle_pairs, $trng_status);  
     log_order($conn, $info);
@@ -1554,7 +1538,7 @@ function log_best_candidate($conn, $best_candidate){
                          pair_price_1, pair_price_2, pair_price_3, str, x_2_3, diff_prz, min_trans, vol_check)  VALUES ".$dati_sql;
     if(!$conn->query($sql) === TRUE) {            
         echo "\n Error: " . $sql . "\n " . $conn->error;  
-        $info = $requestor.", ERROR: " . $sql . " " . $conn->error;
+        $info = "ERROR: " . $sql . " " . $conn->error;
         Log_system_error($conn, $info);   
     }
 }
