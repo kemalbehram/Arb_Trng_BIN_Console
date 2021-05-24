@@ -622,7 +622,8 @@ function check_Asset_Pairs($conn, $Max_Time_Execution, $file_requestor, $exchang
         // if there is no data in the db I will restart the creation of the tables with the pairs and their relationships (minimum 1 minute)
         if($KO_DB_DATA == 1){        
             // the $ arr_AssetPairs_K array is used in the include file
-            require "inc_MK_db_tbl_all_pairs.php"; // updates the data of the tables: asset_pairs and asset_pairs_all_pairs
+            //require "inc_MK_db_tbl_all_pairs.php"; // updates the data of the tables: asset_pairs and asset_pairs_all_pairs
+            include "inc_MK_db_tbl_all_pairs.php"; // updates the data of the tables: asset_pairs and asset_pairs_all_pairs
              // cancel the session variable which contains the data of the relationships between the asset pairs
              // will be recreated later by calling the function: get_pairs_relations
             $_SESSION["Bin_sess_asset_pairs_all_pairs"] = null; 
